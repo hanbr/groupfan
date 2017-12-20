@@ -1,0 +1,22 @@
+# Server settings
+server:
+    port: 80
+#    address: 192.168.1.65
+# SPRING PROFILES
+spring:
+    # HTTP ENCODING
+    http:
+        encoding.charset: UTF-8
+        encoding.enable: true
+        encoding.force: true
+    mvc:
+        view.prefix: /WEB-INF/jsp/
+        view.suffix: .jsp
+
+    datasource:
+            driverClass: com.mysql.jdbc.Driver
+            url: jdbc:mysql://127.0.0.1:3306/groupfandb?useUnicode=true&characterEncoding=utf-8
+            username: root
+            password: 111111
+    jackson:
+            date-format: yyyy-MM-dd HH:mm:ss
