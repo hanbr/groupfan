@@ -24,7 +24,7 @@ public class Goods {
 
     /**
      * 商品规格，JSON格式
-[{“kindName”:”名称”,”price”:100,”count”:100},{...}]
+     * [{“kindName”:”名称”,”price”:100,”count”:100},{...}]
      */
     @Column(name = "goods_kind")
     private String goodsKind;
@@ -143,10 +143,10 @@ public class Goods {
 
     /**
      * 获取商品规格，JSON格式
-[{“kindName”:”名称”,”price”:100,”count”:100},{...}]
+     * [{“kindName”:”名称”,”price”:100,”count”:100},{...}]
      *
      * @return goods_kind - 商品规格，JSON格式
-[{“kindName”:”名称”,”price”:100,”count”:100},{...}]
+     * [{“kindName”:”名称”,”price”:100,”count”:100},{...}]
      */
     public String getGoodsKind() {
         return goodsKind;
@@ -154,10 +154,10 @@ public class Goods {
 
     /**
      * 设置商品规格，JSON格式
-[{“kindName”:”名称”,”price”:100,”count”:100},{...}]
+     * [{“kindName”:”名称”,”price”:100,”count”:100},{...}]
      *
      * @param goodsKind 商品规格，JSON格式
-[{“kindName”:”名称”,”price”:100,”count”:100},{...}]
+     *                  [{“kindName”:”名称”,”price”:100,”count”:100},{...}]
      */
     public void setGoodsKind(String goodsKind) {
         this.goodsKind = goodsKind;
@@ -178,7 +178,7 @@ public class Goods {
      * @param price 价格范围
      */
     public void setPrice(String price) {
-       this.price = price;
+        this.price = price;
     }
 
     /**
@@ -356,8 +356,8 @@ public class Goods {
     }
 
     public List<GoodsKind> getKindList() {
-        if(StringUtils.isNotEmpty(this.goodsKind)){
-            kindList = JSONArray.parseArray(this.goodsKind,GoodsKind.class);
+        if (StringUtils.isNotEmpty(this.goodsKind)) {
+            kindList = JSONArray.parseArray(this.goodsKind, GoodsKind.class);
         }
         return kindList;
     }
@@ -382,29 +382,30 @@ public class Goods {
         this.userHead = userHead;
     }
 
-    public static Goods parseJson(JSONObject jsonObject){
+    public static Goods parseJson(JSONObject jsonObject) {
         Goods goods = new Goods();
         goods.setGoodsName(jsonObject.getString("goodsName"));
         goods.setGoodsDesc(jsonObject.getString("goodsDesc"));
         goods.setAddress(jsonObject.getString("address"));
+        goods.setFreight(jsonObject.getDouble("freight"));
         goods.setReleaseDate(new Date());
         goods.setGoodsKind(jsonObject.getJSONArray("goodsKind").toJSONString());
         goods.setPrice(getPriceScope(goods.getGoodsKind()));
         return goods;
     }
 
-    private static String getPriceScope(String goodsKind){
-        if(StringUtils.isNotEmpty(goodsKind)){
+    private static String getPriceScope(String goodsKind) {
+        if (StringUtils.isNotEmpty(goodsKind)) {
             JSONArray kindArr = JSONArray.parseArray(goodsKind);
             String key = "price";
-            Double maxPrice = JsonUtil.getMaxValue(kindArr,key);
-            Double minPrice = JsonUtil.getMinValue(kindArr,key);
-            if(maxPrice == minPrice){
+            Double maxPrice = JsonUtil.getMaxValue(kindArr, key);
+            Double minPrice = JsonUtil.getMinValue(kindArr, key);
+            if (maxPrice.equals(minPrice)) {
                 return maxPrice.toString();
-            }else {
-                return  String.format("%s%s%s",minPrice, "-", maxPrice);
+            } else {
+                return String.format("%s%s%s", minPrice, "-", maxPrice);
             }
-        }else {
+        } else {
             return "";
         }
     }

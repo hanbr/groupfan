@@ -20,7 +20,7 @@ public class GoodsService extends BaseService<Goods> {
         return goodsDao.getGoodsListByGroupId(groupId);
     }
 
-    public List<Goods> getGoodsListByUser(Integer userId, boolean isRelease) {
+    public List<Goods> getGoodsListByUser(Long userId, boolean isRelease) {
         return goodsDao.getGoodsListByUser(userId, isRelease);
     }
 

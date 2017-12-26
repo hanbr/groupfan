@@ -55,6 +55,7 @@ public class GoodsController {
         }
         return imgList;
     }
+
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
         goodsService.deleteById(id);
@@ -62,7 +63,8 @@ public class GoodsController {
     }
 
     @PostMapping("/update")
-    public Result update(Goods goods) {
+    public Result update(@RequestBody JSONObject jsonObject) {
+        Goods goods = Goods.parseJson(jsonObject);
         goodsService.update(goods);
         return ResultGenerator.genSuccessResult();
     }
@@ -70,6 +72,8 @@ public class GoodsController {
     @GetMapping("/{id}")
     public Result detail(@PathVariable Long id) {
         Goods goods = goodsService.queryById(id);
+        List<GoodsPhoto> photoList = goodsPhotoService.queryByGoodsId(id);
+        goods.setPhotoList(photoList);
         return ResultGenerator.genSuccessResult(goods);
     }
 
@@ -83,5 +87,40 @@ public class GoodsController {
             goods.setPhotoList(imgList);
         }
         return ResultGenerator.genSuccessResult(list);
+    }
+
+    @GetMapping("/my")
+    public Result mylist(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                         @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                         @RequestParam(value = "isRelease", defaultValue = "true") boolean isRelease) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Goods> list = goodsService.getGoodsListByUser(1L, isRelease);
+        for (Goods goods : list) {
+            List<GoodsPhoto> imgList = goodsPhotoService.queryByGoodsId(goods.getGoodsId());
+            goods.setPhotoList(imgList);
+        }
+        return ResultGenerator.genSuccessResult(list);
+    }
+
+    /**
+     * 上架 重新上架
+     */
+    @PostMapping("/my/up")
+    public Result up(@RequestParam(value = "goodsId") Long goodsId) {
+        Goods goods = goodsService.queryById(goodsId);
+        goods.setIsRelease(Const.GOODS_RELEASE_UP);
+        goodsService.update(goods);
+        return ResultGenerator.genSuccessResult();
+    }
+
+    /**
+     * 下架
+     */
+    @PostMapping("/my/down")
+    public Result down(@RequestParam(value = "goodsId") Long goodsId) {
+        Goods goods = goodsService.queryById(goodsId);
+        goods.setIsRelease(Const.GOODS_RELEASE_DOWN);
+        goodsService.update(goods);
+        return ResultGenerator.genSuccessResult();
     }
 }

@@ -30,7 +30,7 @@ public class BannerController {
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping
     public Result delete(@PathVariable Long id) {
         bannerService.deleteById(id);
         return ResultGenerator.genSuccessResult();
@@ -42,17 +42,15 @@ public class BannerController {
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/detail")
+    @GetMapping("/{id}")
     public Result detail(@RequestParam Long id) {
         Banner banner = bannerService.queryById(id);
         return ResultGenerator.genSuccessResult(banner);
     }
 
-    @PostMapping("/list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
-        PageHelper.startPage(page, size);
-        List<Banner> list = bannerService.queryAll();
-        PageInfo pageInfo = new PageInfo(list);
-        return ResultGenerator.genSuccessResult(pageInfo);
+    @GetMapping
+    public Result list(@RequestParam(value = "count",defaultValue = "3") Integer count) {
+        List<Banner> list = bannerService.getBannerIndexList(count);
+        return ResultGenerator.genSuccessResult(list);
     }
 }
